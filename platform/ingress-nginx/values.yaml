@@ -1,0 +1,29 @@
+controller:
+  # DaemonSet: a controller pod on every node, so all three
+  # public IPs answer on 80/443 and DNS can round-robin later.
+  kind: DaemonSet
+
+  service:
+    type: LoadBalancer
+    externalTrafficPolicy: Local   # preserves the real client IP
+
+  config:
+    use-forwarded-headers: "true"
+    proxy-body-size: "16m"
+    enable-real-ip: "true"
+
+  metrics:
+    enabled: true
+    serviceMonitor:
+      enabled: false   # flipped to true in Lab 16
+
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+
+  admissionWebhooks:
+    enabled: true
+
+defaultBackend:
+  enabled: false

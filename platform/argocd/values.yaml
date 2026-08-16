@@ -1,0 +1,34 @@
+global:
+  domain: argocd.192-64-84-66.sslip.io
+
+configs:
+  params:
+    # TLS terminates at ingress-nginx, so argocd-server runs plaintext.
+    # Leave this false and you get an infinite redirect loop.
+    server.insecure: true
+
+server:
+  ingress:
+    enabled: true
+    ingressClassName: nginx
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-prod
+    tls: true
+
+controller:
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+
+repoServer:
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+
+dex:
+  enabled: false
+
+notifications:
+  enabled: false
